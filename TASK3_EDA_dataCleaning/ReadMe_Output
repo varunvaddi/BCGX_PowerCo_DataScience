@@ -1,23 +1,62 @@
-Hypothesis Testing: Price Sensitivity
+# PowerCo Client Data Analysis & Price Sensitivity Study
 
-Hypothesis: Customers are sensitive to price changes; higher prices lead to higher churn.
+## Overview
+This project analyzes client consumption and pricing data provided by PowerCo to understand customer behavior, particularly **churn patterns** and **price sensitivity**. The analysis includes exploratory data analysis (EDA), data cleaning, feature engineering, and hypothesis testing.
 
-Analysis Steps:
+---
 
-Created aggregated price features:
+## Data
+Two datasets were provided:
 
-Average prices over the full year, last 6 months, and last 3 months.
+### 1. `client_data.csv`
+Contains client-level information, including consumption, margins, and churn status.
 
-Calculated combined variable + fixed prices for off-peak, peak, and mid-peak periods.
+**Key columns:**
+- `id` : Client company identifier
+- `churn` : Target variable, indicates if the client churned
+- `cons_12m`, `cons_last_month` : Consumption metrics
+- `forecast_*` : Forecasted consumption and price metrics
+- `margin_*`, `net_margin` : Margin-related metrics
+- `channel_sales`, `has_gas`, `origin_up` : Categorical features
+- `date_activ`, `date_end`, `date_modif_prod`, `date_renewal` : Contract dates
+- `pow_max`, `nb_prod_act`, `num_years_antig` : Client profile metrics
 
-Merged aggregated price features with churn data.
+### 2. `price_data.csv`
+Contains time-series pricing information for each client.
 
-Examined correlations between price variables and churn.
+**Key columns:**
+- `id` : Client company identifier
+- `price_date` : Date of price record
+- `price_off_peak_var`, `price_peak_var`, `price_mid_peak_var` : Variable energy prices
+- `price_off_peak_fix`, `price_peak_fix`, `price_mid_peak_fix` : Fixed power prices
 
-Findings:
+---
 
-Correlation between churn and price variables is very low.
+## Methodology
 
-Indicates that customers’ churn is not strongly sensitive to price changes.
+### 1. Exploratory Data Analysis (EDA)
+- Checked **data types**, missing values, and descriptive statistics.
+- Visualized **numerical features** with histograms and KDE plots.
+- Visualized **categorical features** with bar plots.
+- Calculated **correlations** among numerical features using heatmaps.
+- Conducted **pairplots** for numeric features to inspect relationships.
 
-Other factors (e.g., consumption patterns, contract terms, or service features) likely play a bigger role in churn.
+### 2. Data Cleaning
+- Converted date columns to `datetime` type.
+- Handled missing values.
+- Created **percentage change and rolling average price features** for 3-month and 6-month windows.
+
+### 3. Feature Engineering
+- Created aggregated features from `price_data.csv`:
+  - Yearly, 6-month, and 3-month average prices
+  - Combined variable + fixed prices for each period
+  - Percentage changes over 3-month and 6-month periods
+- Merged these features with `client_data.csv` for modeling.
+
+### 4. Hypothesis Testing: Price Sensitivity
+- **Hypothesis**: Customers are sensitive to price changes.  
+- Observed price trends over 3-month, 6-month, and yearly windows for churned vs retained clients.
+- Calculated correlations between churn and price features.
+- **Conclusion**: Correlation between churn and price variables is very low → Customers’ churn is **not strongly sensitive to price changes**.
+
+---
